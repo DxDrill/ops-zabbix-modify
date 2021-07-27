@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2021-04-14T16:27:15Z</date>
+    <groups>
+        <group>
+            <name>Discovered hosts</name>
+        </group>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template OpenStack Identity V3</template>
+            <name>Template OpenStack Identity V3</name>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>OpenStack Compute</name>
+                </application>
+                <application>
+                    <name>Openstack Endpoints</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>OpenStack Endpoints</name>
+                    <key>openstack.discovery[endpoints_v3,{$OS_AUTHURL},{$OS_TENANT},{$OS_USER},{$OS_PASSWORD},{$OS_USER_DOMAIN_NAME},{$OS_PROJECT_DOMAIN_NAME}]</key>
+                    <delay>3600</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Response time of endpoint {#OS_SERVICENAME} on host {#OS_SERVICEHOST}</name>
+                            <type>SIMPLE</type>
+                            <key>net.tcp.service.perf[http,{#OS_SERVICEHOST},{#OS_SERVICEPORT}]</key>
+                            <delay>60</delay>
+                            <value_type>FLOAT</value_type>
+                            <applications>
+                                <application>
+                                    <name>Openstack Endpoints</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{sum(#2)}=0</expression>
+                                    <name>Endpoint of service {#OS_SERVICENAME} on host {#OS_SERVICEHOST} is unavailable</name>
+                                    <priority>AVERAGE</priority>
+                                    <description>Trigger an event if we couldn't get proper connections over last 2 checks.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>OpenStack Compute Hypervisor</name>
+                    <key>openstack.discovery[hypervisors_v3,{$OS_AUTHURL},{$OS_TENANT},{$OS_USER},{$OS_PASSWORD},{$OS_USER_DOMAIN_NAME},{$OS_PROJECT_DOMAIN_NAME}]</key>
+                    <delay>3600</delay>
+                    <lifetime>7d</lifetime>
+                    <host_prototypes>
+                        <host_prototype>
+                            <host>{#OS_HYPERVISOR_HOSTNAME}</host>
+                            <name>{#OS_HYPERVISOR_HOSTNAME}</name>
+                            <group_links>
+                                <group_link>
+                                    <group>
+                                        <name>Discovered hosts</name>
+                                    </group>
+                                </group_link>
+                            </group_links>
+                            <group_prototypes>
+                                <group_prototype>
+                                    <name>OpenStack {#OS_HYPERVISOR_TYPE} Hypervisors</name>
+                                </group_prototype>
+                            </group_prototypes>
+                            <templates>
+                                <template>
+                                    <name>Template OpenStack Node</name>
+                                </template>
+                            </templates>
+                        </host_prototype>
+                    </host_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$OS_AUTHURL}</macro>
+                    <value>http://127.0.0.1:5000/v3</value>
+                </macro>
+                <macro>
+                    <macro>{$OS_PASSWORD}</macro>
+                    <value>Ui6E34Z9dmBQ2V3biagPokUbBZik862C</value>
+                </macro>
+                <macro>
+                    <macro>{$OS_PROJECT_DOMAIN_NAME}</macro>
+                    <value>Default</value>
+                </macro>
+                <macro>
+                    <macro>{$OS_TENANT}</macro>
+                    <value>admin</value>
+                </macro>
+                <macro>
+                    <macro>{$OS_USER}</macro>
+                    <value>zabbix</value>
+                </macro>
+                <macro>
+                    <macro>{$OS_USER_DOMAIN_NAME}</macro>
+                    <value>Default</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
