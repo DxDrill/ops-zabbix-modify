@@ -23,8 +23,6 @@ Configure the following macros on the **controller host level** in Zabbix so tha
   * **{$OS_TENANT}** - OpenStack tenant name (*admin* by default)
   * **{$OS_USER}** - OpenStack user name (*admin* by default)
   * **{$OS_PASSWORD}** - OpenStack user password (*admin* by default)
-  * **{$OS_USER}** - OpenStack user name (*admin* by default)
-  * **{$OS_PASSWORD}** - OpenStack user password (*admin* by default)
   * **{$OS_USER_DOMAIN_NAME}** - OpenStack User domain name (*Default* by default)
   * **{$OS_PROJECT_DOMAIN_NAME}}** - OpenStack User domain name (*Default* by default)
 
